@@ -12,7 +12,6 @@ services:
       EMQX_DASHBOARD__DEFAULT_USERNAME: admin
       EMQX_DASHBOARD__DEFAULT_PASSWORD: admin_123
     volumes:
-      - ./emqx-enterprise.lic:/opt/emqx/etc/license.lic:ro
       - ./emqx.conf:/opt/emqx/etc/emqx.conf:ro
     ports:
       - "1883:1883"
@@ -35,7 +34,6 @@ services:
       EMQX_DASHBOARD__DEFAULT_USERNAME: admin
       EMQX_DASHBOARD__DEFAULT_PASSWORD: admin_123
     volumes:
-      - ./emqx-enterprise.lic:/opt/emqx/etc/license.lic:ro
       - ./emqx.conf:/opt/emqx/etc/emqx.conf:ro
     depends_on:
       - emqx1

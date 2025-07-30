@@ -11,17 +11,40 @@ then:
 
 ```mqttx sub -h localhost -p 1883 -t "test/topic"```
 
-then on second tab:
+then on a second tab:
 
 ```mqttx pub -h localhost -p 1883 -t "test/topic" -m "Hello, EMQX! This is my first MQTT message."```
 
 
 # Option 2: On Python
-pip install paho-mqtt
-then:
-execute subscriber.py
-then:
-execute publisher.py
+first start by installing the module ```pip install paho-mqtt```
+
+## Simple Single-node Test
+execute these on separate tabs:
+
+```
+python simple_subscriber.py
+python simple_publisher.py
+```
+
+## Cluster Multi-node Stress Test
+
+To have a cluster of nodes for EMQX we need to have a valid license for enterprise application development from EMQX. You can get
+a 15-day trial license, but for production, you need to purchase one. Without the license, you can only have a single-node community
+version of EMQX to play with. Add your license to ```emqx.conf``` file.
+
+We have an HAProxy server act as a load balancer on top of EMQX cluster to distribute load on the two existing nodes.
+
+To start the test, first start the docker compose:
+
+```docker compose -f .\docker-compose.yaml up -d```
+
+Then, start subscriber and publisher as below on separate tabs:
+
+```
+python stress_subscriber.py
+python stress_publisher.py
+```
 
 # General Considerations
 
