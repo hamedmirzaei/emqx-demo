@@ -1,0 +1,63 @@
+services:
+  emqx1:
+    image: emqx/emqx:5.10
+    hostname: node1.local
+    container_name: emqx1
+    environment:
+      EMQX_NODE__NAME: emqx@node1.local
+      EMQX_NODE__COOKIE: "supersecretcookie"
+      EMQX_CLUSTER__DISCOVERY_STRATEGY: static
+      EMQX_CLUSTER__STATIC__SEEDS: emqx@node1.local,emqx@node2.local
+      EMQX_RPC__PORT_DISCOVERY: manual
+      EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: admin_123
+    volumes:
+      - ./emqx-enterprise.lic:/opt/emqx/etc/license.lic:ro
+      - ./emqx.conf:/opt/emqx/etc/emqx.conf:ro
+    ports:
+      - "1883:1883"
+      - "18083:18083"
+    networks:
+      emqx-net:
+        aliases:
+          - node1.local
+
+  emqx2:
+    image: emqx/emqx:5.10
+    hostname: node2.local
+    container_name: emqx2
+    environment:
+      EMQX_NODE__NAME: emqx@node2.local
+      EMQX_NODE__COOKIE: "supersecretcookie"
+      EMQX_CLUSTER__DISCOVERY_STRATEGY: static
+      EMQX_CLUSTER__STATIC__SEEDS: emqx@node1.local,emqx@node2.local
+      EMQX_RPC__PORT_DISCOVERY: manual
+      EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: admin_123
+    volumes:
+      - ./emqx-enterprise.lic:/opt/emqx/etc/license.lic:ro
+      - ./emqx.conf:/opt/emqx/etc/emqx.conf:ro
+    depends_on:
+      - emqx1
+    networks:
+      emqx-net:
+        aliases:
+          - node2.local
+
+  # Add a simple TCP load balancer (e.g., HAProxy)
+  haproxy:
+    image: haproxy:latest # Or a specific version like haproxy:2.8
+    container_name: haproxy
+    ports:
+      - "1884:1883" # Expose HAProxy's port 1884 to host's 1884, mapping to MQTT's 1883
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    networks:
+      - emqx-net
+    depends_on:
+      - emqx1
+      - emqx2
+
+networks:
+  emqx-net:
+    driver: bridge
