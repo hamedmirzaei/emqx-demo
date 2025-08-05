@@ -9,10 +9,10 @@ from tqdm.asyncio import tqdm as async_tqdm  # Optional for async progress bar
 # --- Configuration ---
 BROKER_ADDRESS = "localhost"  # Connect to the exposed port of emqx1 (or HAProxy)
 BROKER_PORT = 1884
-NUM_SUBSCRIBERS = 2  # Number of simulated subscriber clients
+NUM_SUBSCRIBERS = 100  # Number of simulated subscriber clients
 SUBSCRIBE_TOPIC = "sensors/data/#"  # Subscribe to all sensor data
 QOS = 2  # QoS level for subscription (0, 1, or 2)
-EXPECTED_TOTAL_MESSAGES = 20 * 10  # Example: if publisher has 20 clients * 10 messages each
+EXPECTED_TOTAL_MESSAGES = 100 * 10  # Example: if publisher has 20 clients * 10 messages each
 
 # --- Global Variables for Metrics ---
 received_messages_count = 0

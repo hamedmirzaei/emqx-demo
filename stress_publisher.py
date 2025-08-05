@@ -8,7 +8,7 @@ from tqdm.asyncio import tqdm as async_tqdm  # For progress bar
 # --- Configuration ---
 BROKER_ADDRESS = "localhost"  # Connect to the exposed port of emqx1 (or HAProxy)
 BROKER_PORT = 1884
-NUM_CLIENTS = 20  # Number of simulated publisher clients
+NUM_CLIENTS = 100  # Number of simulated publisher clients
 MESSAGES_PER_CLIENT = 10  # How many messages each client sends
 MESSAGE_INTERVAL_SEC = 0.1  # Time between messages from a single client
 PAYLOAD_SIZE_BYTES = 100  # Size of the message payload (approx)
